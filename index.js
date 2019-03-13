@@ -15,83 +15,106 @@
 //. The Maybe type represents optional values: a value of type `Maybe a` is
 //. either Nothing (the empty value) or a Just whose value is of type `a`.
 
-(function(f) {
+(function (f) {
 
   'use strict';
 
-  var util = {inspect: {}};
+  var util = { inspect: {} };
 
   /* istanbul ignore else */
   if (typeof module === 'object' && typeof module.exports === 'object') {
-    module.exports = f (require ('util'),
-                        require ('sanctuary-show'),
-                        require ('sanctuary-type-classes'));
+    module.exports = f(require('util'),
+      require('sanctuary-show'),
+      require('sanctuary-type-classes'));
   } else if (typeof define === 'function' && define.amd != null) {
-    define (['sanctuary-show', 'sanctuary-type-classes'], function(show, Z) {
-      return f (util, show, Z);
+    define(['sanctuary-show', 'sanctuary-type-classes'], function (show, Z) {
+      return f(util, show, Z);
     });
   } else {
-    self.sanctuaryMaybe = f (util,
-                             self.sanctuaryShow,
-                             self.sanctuaryTypeClasses);
+    self.sanctuaryMaybe = f(util,
+      self.sanctuaryShow,
+      self.sanctuaryTypeClasses);
   }
 
-} (function(util, show, Z) {
+}(function (util, show, Z) {
 
   'use strict';
 
   /* istanbul ignore if */
   if (typeof __doctest !== 'undefined') {
-    var $ = __doctest.require ('sanctuary-def');
-    var type = __doctest.require ('sanctuary-type-identifiers');
-    var S = (function() {
-      var S = __doctest.require ('sanctuary');
+    var $ = __doctest.require('sanctuary-def');
+    var type = __doctest.require('sanctuary-type-identifiers');
+    var S = (function () {
+      var S = __doctest.require('sanctuary');
       var MaybeType = $.UnaryType
         ('sanctuary-maybe/Maybe')
         ('')
-        (function(x) { return type (x) === Maybe['@@type']; })
-        (function(m) { return m.isJust ? [m.value] : []; });
-      var env = Z.concat (S.env, [$.TypeClass, MaybeType ($.Unknown)]);
-      return S.create ({checkTypes: true, env: env});
-    } ());
+        (function (x) { return type(x) === Maybe['@@type']; })
+        (function (m) { return m.isJust ? [m.value] : []; });
+      var env = Z.concat(S.env, [$.TypeClass, MaybeType($.Unknown)]);
+      return S.create({ checkTypes: true, env: env });
+    }());
   }
 
   var Maybe = {};
 
   var Nothing$prototype = {
     /* eslint-disable key-spacing */
-    'constructor':            Maybe,
-    'isNothing':              true,
-    'isJust':                 false,
-    '@@show':                 Nothing$prototype$show,
-    'fantasy-land/equals':    Nothing$prototype$equals,
-    'fantasy-land/lte':       Nothing$prototype$lte,
-    'fantasy-land/concat':    Nothing$prototype$concat,
-    'fantasy-land/filter':    Nothing$prototype$filter,
-    'fantasy-land/map':       Nothing$prototype$map,
-    'fantasy-land/ap':        Nothing$prototype$ap,
-    'fantasy-land/chain':     Nothing$prototype$chain,
-    'fantasy-land/alt':       Nothing$prototype$alt,
-    'fantasy-land/reduce':    Nothing$prototype$reduce,
-    'fantasy-land/traverse':  Nothing$prototype$traverse,
-    'fantasy-land/extend':    Nothing$prototype$extend
+    'constructor': Maybe,
+    'isNothing': true,
+    'isJust': false,
+    '@@show': Nothing$prototype$show,
+    'fantasy-land/equals': Nothing$prototype$equals,
+    'fantasy-land/lte': Nothing$prototype$lte,
+    'fantasy-land/concat': Nothing$prototype$concat,
+    'fantasy-land/filter': Nothing$prototype$filter,
+    'fantasy-land/map': Nothing$prototype$map,
+    'fantasy-land/ap': Nothing$prototype$ap,
+    'fantasy-land/chain': Nothing$prototype$chain,
+    'fantasy-land/alt': Nothing$prototype$alt,
+    'fantasy-land/reduce': Nothing$prototype$reduce,
+    'fantasy-land/traverse': Nothing$prototype$traverse,
+    'fantasy-land/extend': Nothing$prototype$extend,
+
+    // for easy chaining.
+    'equals': Nothing$prototype$equals,
+    'lte': Nothing$prototype$lte,
+    'concat': Nothing$prototype$concat,
+    'filter': Nothing$prototype$filter,
+    'map': Nothing$prototype$map,
+    'ap': Nothing$prototype$ap,
+    'chain': Nothing$prototype$chain,
+    'alt': Nothing$prototype$alt,
+    'reduce': Nothing$prototype$reduce,
+    'traverse': Nothing$prototype$traverse,
+    'extend': Nothing$prototype$extend,
     /* eslint-enable key-spacing */
   };
 
   var Just$prototype = {
     /* eslint-disable key-spacing */
-    'constructor':            Maybe,
-    'isNothing':              false,
-    'isJust':                 true,
-    '@@show':                 Just$prototype$show,
-    'fantasy-land/filter':    Just$prototype$filter,
-    'fantasy-land/map':       Just$prototype$map,
-    'fantasy-land/ap':        Just$prototype$ap,
-    'fantasy-land/chain':     Just$prototype$chain,
-    'fantasy-land/alt':       Just$prototype$alt,
-    'fantasy-land/reduce':    Just$prototype$reduce,
-    'fantasy-land/traverse':  Just$prototype$traverse,
-    'fantasy-land/extend':    Just$prototype$extend
+    'constructor': Maybe,
+    'isNothing': false,
+    'isJust': true,
+    '@@show': Just$prototype$show,
+    'fantasy-land/filter': Just$prototype$filter,
+    'fantasy-land/map': Just$prototype$map,
+    'fantasy-land/ap': Just$prototype$ap,
+    'fantasy-land/chain': Just$prototype$chain,
+    'fantasy-land/alt': Just$prototype$alt,
+    'fantasy-land/reduce': Just$prototype$reduce,
+    'fantasy-land/traverse': Just$prototype$traverse,
+    'fantasy-land/extend': Just$prototype$extend,
+
+    // for easy chaining
+    'filter': Just$prototype$filter,
+    'map': Just$prototype$map,
+    'ap': Just$prototype$ap,
+    'chain': Just$prototype$chain,
+    'alt': Just$prototype$alt,
+    'reduce': Just$prototype$reduce,
+    'traverse': Just$prototype$traverse,
+    'extend': Just$prototype$extend,
     /* eslint-enable key-spacing */
   };
 
@@ -153,7 +176,7 @@
   //. > Nothing
   //. Nothing
   //. ```
-  var Nothing = Maybe.Nothing = Object.create (Nothing$prototype);
+  var Nothing = Maybe.Nothing = Object.create(Nothing$prototype);
 
   //# Maybe.Just :: a -> Maybe a
   //.
@@ -163,15 +186,15 @@
   //. > Just (42)
   //. Just (42)
   //. ```
-  var Just = Maybe.Just = function(value) {
-    var just = Object.create (Just$prototype);
-    if (Z.Setoid.test (value)) {
+  var Just = Maybe.Just = function (value) {
+    var just = Object.create(Just$prototype);
+    if (Z.Setoid.test(value)) {
       just['fantasy-land/equals'] = Just$prototype$equals;
-      if (Z.Ord.test (value)) {
+      if (Z.Ord.test(value)) {
         just['fantasy-land/lte'] = Just$prototype$lte;
       }
     }
-    if (Z.Semigroup.test (value)) {
+    if (Z.Semigroup.test(value)) {
       just['fantasy-land/concat'] = Just$prototype$concat;
     }
     just.value = value;
@@ -199,7 +222,7 @@
   //. > S.empty (Maybe)
   //. Nothing
   //. ```
-  Maybe['fantasy-land/empty'] = function() { return Nothing; };
+  Maybe['fantasy-land/empty'] = function () { return Nothing; };
 
   //# Maybe.fantasy-land/of :: a -> Maybe a
   //.
@@ -211,8 +234,8 @@
   //. ```
   Maybe['fantasy-land/of'] = Just;
 
-  function next(x) { return {tag: next, value: x}; }
-  function done(x) { return {tag: done, value: x}; }
+  function next(x) { return { tag: next, value: x }; }
+  function done(x) { return { tag: done, value: x }; }
 
   //# Maybe.fantasy-land/chainRec :: ((a -> c, b -> c, a) -> Maybe c, a) -> Maybe b
   //.
@@ -233,14 +256,14 @@
   //. . )
   //. Just (65536)
   //. ```
-  Maybe['fantasy-land/chainRec'] = function(f, x) {
-    var r = next (x);
+  Maybe['fantasy-land/chainRec'] = function (f, x) {
+    var r = next(x);
     while (r.tag === next) {
-      var maybe = f (next, done, r.value);
+      var maybe = f(next, done, r.value);
       if (maybe.isNothing) return maybe;
       r = maybe.value;
     }
-    return Just (r.value);
+    return Just(r.value);
   };
 
   //# Maybe.fantasy-land/zero :: () -> Maybe a
@@ -251,7 +274,7 @@
   //. > S.zero (Maybe)
   //. Nothing
   //. ```
-  Maybe['fantasy-land/zero'] = function() { return Nothing; };
+  Maybe['fantasy-land/zero'] = function () { return Nothing; };
 
   //# Maybe#@@show :: Showable a => Maybe a ~> () -> String
   //.
@@ -269,7 +292,7 @@
     return 'Nothing';
   }
   function Just$prototype$show() {
-    return 'Just (' + show (this.value) + ')';
+    return 'Just (' + show(this.value) + ')';
   }
 
   //# Maybe#fantasy-land/equals :: Setoid a => Maybe a ~> Maybe a -> Boolean
@@ -296,7 +319,7 @@
     return other.isNothing;
   }
   function Just$prototype$equals(other) {
-    return other.isJust && Z.equals (this.value, other.value);
+    return other.isJust && Z.equals(this.value, other.value);
   }
 
   //# Maybe#fantasy-land/lte :: Ord a => Maybe a ~> Maybe a -> Boolean
@@ -317,7 +340,7 @@
     return true;
   }
   function Just$prototype$lte(other) {
-    return other.isJust && Z.lte (this.value, other.value);
+    return other.isJust && Z.lte(this.value, other.value);
   }
 
   //# Maybe#fantasy-land/concat :: Semigroup a => Maybe a ~> Maybe a -> Maybe a
@@ -345,7 +368,7 @@
     return other;
   }
   function Just$prototype$concat(other) {
-    return other.isJust ? Just (Z.concat (this.value, other.value)) : this;
+    return other.isJust ? Just(Z.concat(this.value, other.value)) : this;
   }
 
   //# Maybe#fantasy-land/filter :: Maybe a ~> (a -> Boolean) -> Maybe a
@@ -368,7 +391,7 @@
     return this;
   }
   function Just$prototype$filter(pred) {
-    return pred (this.value) ? this : Nothing;
+    return pred(this.value) ? this : Nothing;
   }
 
   //# Maybe#fantasy-land/map :: Maybe a ~> (a -> b) -> Maybe b
@@ -387,7 +410,7 @@
     return this;
   }
   function Just$prototype$map(f) {
-    return Just (f (this.value));
+    return Just(f(this.value));
   }
 
   //# Maybe#fantasy-land/ap :: Maybe a ~> Maybe (a -> b) -> Maybe b
@@ -414,7 +437,7 @@
     return this;
   }
   function Just$prototype$ap(other) {
-    return other.isJust ? Just (other.value (this.value)) : other;
+    return other.isJust ? Just(other.value(this.value)) : other;
   }
 
   //# Maybe#fantasy-land/chain :: Maybe a ~> (a -> Maybe b) -> Maybe b
@@ -438,7 +461,7 @@
     return this;
   }
   function Just$prototype$chain(f) {
-    return f (this.value);
+    return f(this.value);
   }
 
   //# Maybe#fantasy-land/alt :: Maybe a ~> Maybe a -> Maybe a
@@ -484,7 +507,7 @@
     return x;
   }
   function Just$prototype$reduce(f, x) {
-    return f (x, this.value);
+    return f(x, this.value);
   }
 
   //# Maybe#fantasy-land/traverse :: Applicative f => Maybe a ~> (TypeRep f, a -> f b) -> f (Maybe b)
@@ -500,10 +523,10 @@
   //. [Just ('foo'), Just ('bar'), Just ('baz')]
   //. ```
   function Nothing$prototype$traverse(typeRep, f) {
-    return Z.of (typeRep, this);
+    return Z.of(typeRep, this);
   }
   function Just$prototype$traverse(typeRep, f) {
-    return Z.map (Just, f (this.value));
+    return Z.map(Just, f(this.value));
   }
 
   //# Maybe#fantasy-land/extend :: Maybe a ~> (Maybe a -> b) -> Maybe b
@@ -522,7 +545,7 @@
     return this;
   }
   function Just$prototype$extend(f) {
-    return Just (f (this));
+    return Just(f(this));
   }
 
   return Maybe;
